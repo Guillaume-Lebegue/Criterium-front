@@ -1,0 +1,22 @@
+.wrapper {
+    background: #ddd;
+    height: 64px !important;
+    width: 64px !important;
+}
+
+:host-context(.md) .wrapper {
+    height: 48px !important;
+    width: 48px !important;
+}
+
+:host-context(.sm) .wrapper {
+    height: 32px !important;
+    width: 32px !important;
+}
+
+.roundImg {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-fit: center;
+}

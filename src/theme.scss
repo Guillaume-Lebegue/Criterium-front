@@ -1,0 +1,23 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/utilities/borders";
+@import "~bootstrap/scss/mixins";
+
+
+$theme-colors: (
+    "primary": #07ab4b,
+    "secondary": #007bff,
+    "success": #4DBA9D,
+    "danger": #ED6745,
+    "dark": #828282
+);
+
+
+
+body {
+    color: #555 !important;
+}
+
+a {
+    cursor: pointer;
+}
