@@ -1,0 +1,124 @@
+<div class="modal-header">
+    <h4 class="modal-title">Inscription</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="signupForm" style="display: flex; height: 100%; width: 300%;">
+
+        <div [@changeStep]="step" [@visible]="step === 1 ? 'yes' : 'no'" style="flex: 1;">
+            <div class="form-group">
+                <label for="licence">N° Licence</label>
+                <input type="number" id="licence"
+                    class="form-control" formControlName="licence"
+                    placeholder="N°Licence" #licence>
+                <div class="invalid-feedback">Information requise</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="firstName">Prenom</label>
+                <input type="text" id="firstName"
+                    class="form-control" formControlName="firstName"
+                    placeholder="Prenom" #firstName>
+            </div>
+    
+            <div class="form-group">
+                <label for="lastName">Nom</label>
+                <input type="text" id="lastName"
+                    class="form-control" formControlName="lastName"
+                    placeholder="Nom" #lastName>
+            </div>
+    
+            <div class="form-group">
+                <label for="gender">Genre</label>
+                <select id="gender" class="custom-select"
+                    formControlName="gender" #gender>
+                    <option value="">Choisissez votre genre</option>
+                    <option value="M">Homme</option>
+                    <option value="F">Femme</option>
+                    <option value="Nan">Autre</option>
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label for="birthDate">Date de naissance</label>
+                <div class="input-group">
+                    <input class="form-control" placeholder="dd/mm/yyyy"
+                        name="birthDate" id="birthDate" formControlName="birthDate"
+                        ngbDatepicker #birthDate="ngbDatepicker" [maxDate]="calendar.getToday()"
+                        [minDate]="calendar.getPrev(calendar.getToday(), 'y', 100)">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" (click)="birthDate.toggle()" type="button">
+                            calendar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div [@changeStep]="step" [@visible]="step === 2 ? 'yes' : 'no'" style="flex: 1;">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" id="email"
+                    class="form-control" formControlName="email"
+                    placeholder="email" #email>
+            </div>
+    
+            <div class="form-group">
+                <label for="phone">Téléphone</label>
+                <ngx-intl-tel-input
+                    class="form-control border-0 pl-0"
+                    [preferredCountries]="[CountryISO.France]"
+                    [enableAutoCountrySelect]="true"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                    [selectFirstCountry]="false"
+                    [selectedCountryISO]="CountryISO.France"
+                    [maxLength]="15"
+                    [tooltipField]="TooltipLabel.Name"
+                    [phoneValidation]="true"
+                    [separateDialCode]="true"
+                    name="phone"
+                    formControlName="phone">
+                </ngx-intl-tel-input>
+            </div>
+        </div>
+
+        <div [@changeStep]="step" [@visible]="step === 3 ? 'yes' : 'no'" style="flex: 1;">
+            <div class="form-group">
+                <label for="password1">Mot de passe</label>
+                <input type="text" class="form-control"
+                    id="password1" formControlName="password1"
+                    placeholder="Mot de passe" #password1>
+            </div>
+    
+            <div class="form-group">
+                <label for="password2">Confirmez</label>
+                <input type="text" class="form-control"
+                    id="password2" formControlName="password2"
+                    placeholder="Confirmez le mot de passe" #password2>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-primary" (click)="move(false)">
+        <ng-container *ngIf="step !== 1">
+            Retour
+        </ng-container>
+        <ng-container *ngIf="step === 1">
+            Annuler
+        </ng-container>
+    </button>
+    <button type="button" class="btn btn-primary" (click)="move(true)">
+        <ng-container *ngIf="step !== 3">
+            Suivant
+        </ng-container>
+        <ng-container *ngIf="step === 3">
+            Envoyer
+        </ng-container>
+    </button>
+</div>

@@ -9,25 +9,35 @@
         <ul class="navbar-nav ml-auto mr-3">
 
             <li class="nav-item">
-                <a class="nav-link">
+                <a class="nav-link" (click)="openSignupModal()">
                     <span>Inscription</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link">
+                <a class="nav-link" (click)="openLoginModal()">
                     <span>Connection</span>
                 </a>
             </li>
 
             <li class="nav-item d-lg-inline d-xl-inline">
                 <div class="dropdown">
-                    <button class="btn btn-lg btn-default dropdown-toggle mx-2 d-flex" type="button" id="menu" data-toggle="menuSropdown">
+                    <button class="btn btn-lg btn-default dropdown-toggle mx-2 d-flex"
+                        type="button"id="menu" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <app-round-image class="sm" src="assets\tmpAssets\defaultProfilePicture.jpg"></app-round-image>
                     </button>
-                </div>
-                <div class="dropdown-menu">
-
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="menu">
+                        <a class="dropdown-item" role="menuitem" tabindex="-1">
+                            <span>Mes evenements</span>
+                        </a>
+                        <a class="dropdown-item" role="menuitem" tabindex="-1" [routerLink]="['/profil']">
+                            <span>Profil</span>
+                        </a>
+                        <a class="dropdown-item" role="menuitem" tabindex="-1" (click)="console.log('disconnect')">
+                            <span>Deconection</span>
+                        </a>
+                    </div>
                 </div>
             </li>
 

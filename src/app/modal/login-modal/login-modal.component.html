@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h4 class="modal-title">Connection</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="loginForm">
+        <div class="form-group">
+            <ng-toggle
+            onColor="primary"
+            [onText]="'N°Licence'"
+            offColor="secondary"
+            offText="Email"
+            size="sm"
+            formControlName="licenceOrEmail"
+            ></ng-toggle>
+            <input *ngIf="licenceOrEmail.value"
+                type="number" id="licence"
+                class="form-control" formControlName="licence"
+                placeholder="N°Licence" #licence>
+            <div class="invalid-feedback" *ngIf="licenceOrEmail.value">
+                Information requise ou choisissez par email
+            </div>
+            <input *ngIf="!licenceOrEmail.value"
+                type="text" id="email"
+                class="form-control" formControlName="email"
+                placeholder="Email" #email>
+            <div class="invalid-feedback" *ngIf="!licenceOrEmail.value">
+                Email requis ou choisissez par licence
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password"
+                class="form-control" formControlName="password"
+                placeholder="Mot de passe" #password>
+            <div class="invalid-feedback">
+                Mot de passe requis
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-primary" (click)="activeModal.dismiss('Cancel')">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="submitLogin()">Connection</button>
+</div>
