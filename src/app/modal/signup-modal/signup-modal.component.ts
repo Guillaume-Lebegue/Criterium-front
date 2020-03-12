@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NgbActiveModal, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { CountryISO, SearchCountryField, TooltipLabel } from 'ngx-intl-tel-input';
 import { trigger, transition, style, animate, state } from '@angular/animations';
@@ -63,15 +63,22 @@ export class SignupModalComponent implements OnInit {
 
   ngOnInit() {
     this.signupForm = this.formBuilder.group({
-      licence: ['', [Validators.required]],
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      gender: ['', [Validators.required,]],
-      birthDate: ['', [Validators.required]],
-      email: ['', [Validators.email]],
-      phone: [''],
-      password1: ['', Validators.required, Validators.minLength(5), Validators.maxLength(18)],
-      password2: ['', Validators.required, this.validatePasswordSame]
+      licence: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
+      firstName: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
+      lastName: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
+      gender: new FormControl('', {validators: [Validators.required]}),
+      birthDate: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
+      email: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
+      phone: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
+      password1: new FormControl('', {validators: [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(18)
+      ], updateOn: 'blur'}),
+      password2: new FormControl('', {validators: [ 
+        Validators.required,
+        this.validatePasswordSame
+      ], updateOn: 'blur'})
     })
   }
 
@@ -85,6 +92,7 @@ export class SignupModalComponent implements OnInit {
   private get password(): AbstractControl {return this.signupForm.controls.password1};
   private get passwordCopy(): AbstractControl {return this.signupForm.controls.password2};
 
+
   private move(forward: boolean) {
     if (forward) {
       if (this.step < 3) this.step++
@@ -97,39 +105,20 @@ export class SignupModalComponent implements OnInit {
 
   private submitLogin() {
     console.log('date: ', this.birthDate.value);
-    // this.invalid = false;
 
-    // this.doValidate(this.licenceField, this.licence)
-    // this.doValidate(this.firstNameField, this.firstName)
-    // this.doValidate(this.lastNameField, this.lastName)
-    // this.doValidate(this.genderField, this.gender)
-    // this.doValidate(this.birthDateField, this.birthDate)
-    // this.doValidate(this.emailField, this.email)
-    // this.doValidate(this.phoneField, this.phone)
-    // this.doValidate(this.password1Field, this.password)
-    // this.doValidate(this.password2Field, this.passwordCopy)
-
-    // console.log('submit: ', this.invalid);
+    console.log('submit: ', this.invalid);
   }
 
-  private validatePasswordSame(passControl: FormControl) {
-    if (passControl.value === this.password.value) {
+  private validatePasswordSame = (passControl: FormControl): ValidationErrors => {
+    console.log('this: ', this);
+    if (!this.signupForm || passControl.value === this.password.value) {
+      console.log('same');
       return null;
     } else {
+      console.log('diff');
       return {
-        validatePasswordSame: {
-          valid: false
-        }
+        notSame: true
       };
-    }
-  }
-
-  private doValidate(elementRef: ElementRef, control: AbstractControl) {
-    if (control.invalid) {
-      this.renderer.addClass(elementRef.nativeElement, 'is-invalid');
-      this.invalid = true;
-    } else {
-      this.renderer.removeClass(elementRef.nativeElement, 'is-invalid');
     }
   }
 

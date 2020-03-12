@@ -12,33 +12,39 @@
                 <label for="licence">N° Licence</label>
                 <input type="number" id="licence"
                     class="form-control" formControlName="licence"
-                    placeholder="N°Licence" #licence>
-                <div class="invalid-feedback">Information requise</div>
+                    placeholder="N°Licence" #licence
+                    [ngClass]="{'is-invalid': signupForm.get('licence').invalid && signupForm.get('licence').dirty}">
+                <div class="invalid-feedback">N°Licence requise</div>
             </div>
             
             <div class="form-group">
                 <label for="firstName">Prenom</label>
                 <input type="text" id="firstName"
                     class="form-control" formControlName="firstName"
-                    placeholder="Prenom" #firstName>
+                    placeholder="Prenom" #firstName
+                    [ngClass]="{'is-invalid': signupForm.get('firstName').invalid && signupForm.get('firstName').dirty}">
+                <div class="invalid-feedback">Prénom requis</div>
             </div>
     
             <div class="form-group">
                 <label for="lastName">Nom</label>
                 <input type="text" id="lastName"
                     class="form-control" formControlName="lastName"
-                    placeholder="Nom" #lastName>
+                    placeholder="Nom" #lastName
+                    [ngClass]="{'is-invalid': signupForm.get('lastName').invalid && signupForm.get('lastName').dirty}">
+                <div class="invalid-feedback">Nom requis</div>
             </div>
     
             <div class="form-group">
                 <label for="gender">Genre</label>
                 <select id="gender" class="custom-select"
-                    formControlName="gender" #gender>
+                    formControlName="gender" #gender
+                    [ngClass]="{'is-invalid': signupForm.get('gender').invalid && signupForm.get('gender').dirty}">
                     <option value="">Choisissez votre genre</option>
                     <option value="M">Homme</option>
                     <option value="F">Femme</option>
-                    <option value="Nan">Autre</option>
                 </select>
+                <div class="invalid-feedback">Genre requis</div>
             </div>
     
             <div class="form-group">
@@ -47,13 +53,15 @@
                     <input class="form-control" placeholder="dd/mm/yyyy"
                         name="birthDate" id="birthDate" formControlName="birthDate"
                         ngbDatepicker #birthDate="ngbDatepicker" [maxDate]="calendar.getToday()"
-                        [minDate]="calendar.getPrev(calendar.getToday(), 'y', 100)">
+                        [minDate]="calendar.getPrev(calendar.getToday(), 'y', 100)"
+                        [ngClass]="{'is-invalid': signupForm.get('birthDate').invalid && signupForm.get('birthDate').dirty}">
                     <div class="input-group-append">
                         <button class="btn btn-primary" (click)="birthDate.toggle()" type="button">
                             calendar
                         </button>
                     </div>
                 </div>
+                <div class="invalid-feedback">Date de naissance requise</div>
             </div>
         </div>
 
@@ -62,7 +70,9 @@
                 <label for="email">Email</label>
                 <input type="text" id="email"
                     class="form-control" formControlName="email"
-                    placeholder="email" #email>
+                    placeholder="email" #email
+                    [ngClass]="{'is-invalid': signupForm.get('email').invalid && signupForm.get('email').dirty}">
+                <div class="invalid-feedback">Email requis</div>
             </div>
     
             <div class="form-group">
@@ -81,24 +91,37 @@
                     [phoneValidation]="true"
                     [separateDialCode]="true"
                     name="phone"
-                    formControlName="phone">
+                    formControlName="phone"
+                    [ngClass]="{'is-invalid': signupForm.get('phone').invalid && signupForm.get('phone').dirty}">
                 </ngx-intl-tel-input>
+                <div class="invalid-feedback">Téléphone requis</div>
             </div>
         </div>
 
         <div [@changeStep]="step" [@visible]="step === 3 ? 'yes' : 'no'" style="flex: 1;">
             <div class="form-group">
                 <label for="password1">Mot de passe</label>
-                <input type="text" class="form-control"
+                <input type="password" class="form-control" name="password"
                     id="password1" formControlName="password1"
-                    placeholder="Mot de passe" #password1>
+                    placeholder="Mot de passe" #password1
+                    [ngClass]="{'is-invalid': signupForm.get('password1').invalid && signupForm.get('password1').dirty}">
+                <div class="invalid-feedback">Mot de passe requis</div>
             </div>
     
             <div class="form-group">
                 <label for="password2">Confirmez</label>
-                <input type="text" class="form-control"
+                <input type="password" class="form-control"
                     id="password2" formControlName="password2"
-                    placeholder="Confirmez le mot de passe" #password2>
+                    placeholder="Confirmez le mot de passe" #password2
+                    [ngClass]="{'is-invalid': signupForm.get('password2').invalid && signupForm.get('password2').dirty}">
+                <div class="invalid-feedback" *ngIf="signupForm.get('password2').errors">
+                    <div *ngIf="signupForm.get('password2').errors.required">
+                        Mot de passe requis
+                    </div>
+                    <div *ngIf="signupForm.get('password2').errors.notSame && !signupForm.get('password2').errors.required">
+                        Mots de passes différents
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -113,12 +136,21 @@
             Annuler
         </ng-container>
     </button>
-    <button type="button" class="btn btn-primary" (click)="move(true)">
-        <ng-container *ngIf="step !== 3">
-            Suivant
-        </ng-container>
-        <ng-container *ngIf="step === 3">
-            Envoyer
-        </ng-container>
+    <button type="button" class="btn btn-primary"
+        (click)="move(true)" *ngIf="step === 1"
+        [disabled]="signupForm.get('licence').invalid || signupForm.get('firstName').invalid ||
+                    signupForm.get('lastName').invalid || signupForm.get('gender').invalid ||
+                    signupForm.get('birthDate').invalid">
+        Suivant
+    </button>
+    <button type="button" class="btn btn-primary"
+        (click)="move(true)" *ngIf="step === 2"
+        [disabled]="signupForm.get('email').invalid || signupForm.get('phone').invalid">
+        Suivant
+    </button>
+    <button type="button" class="btn btn-primary"
+        (click)="move(true)" *ngIf="step === 3"
+        [disabled]="signupForm.invalid">
+        Envoyer
     </button>
 </div>
