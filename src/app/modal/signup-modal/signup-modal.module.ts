@@ -8,6 +8,8 @@ import { DateFormatter } from 'src/app/providers/dateFormatter';
 
 import { SignupModalComponent } from './signup-modal.component';
 
+import { AuthRestService } from '../../services/rest/auth/auth.service';
+
 @NgModule({
   declarations: [
     SignupModalComponent
@@ -23,7 +25,8 @@ import { SignupModalComponent } from './signup-modal.component';
     BrowserAnimationsModule
   ],
   providers: [
-    {provide: NgbDateParserFormatter, useValue: new DateFormatter}
+    {provide: NgbDateParserFormatter,useValue: new DateFormatter},
+    AuthRestService
   ]
 })
 export class SignupModalModule { }

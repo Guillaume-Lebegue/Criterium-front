@@ -4,6 +4,9 @@ import { NgbActiveModal, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { CountryISO, SearchCountryField, TooltipLabel } from 'ngx-intl-tel-input';
 import { trigger, transition, style, animate, state } from '@angular/animations';
 
+import { AuthRestService } from '../../services/rest/auth/auth.service';
+import { UserRestService } from 'src/app/services/rest/user/user.service';
+
 @Component({
   selector: 'app-signup-modal',
   templateUrl: './signup-modal.component.html',
@@ -55,6 +58,8 @@ export class SignupModalComponent implements OnInit {
   @ViewChild('password2', {static: false}) password2Field: ElementRef;
 
   constructor(
+    private authRest: AuthRestService,
+    private userRest: UserRestService,
     private activeModal: NgbActiveModal,
     private formBuilder: FormBuilder,
     private renderer: Renderer2,
@@ -63,22 +68,22 @@ export class SignupModalComponent implements OnInit {
 
   ngOnInit() {
     this.signupForm = this.formBuilder.group({
-      licence: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
-      firstName: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
-      lastName: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
+      licence: new FormControl('', {validators: [Validators.required]}),
+      firstName: new FormControl('', {validators: [Validators.required]}),
+      lastName: new FormControl('', {validators: [Validators.required]}),
       gender: new FormControl('', {validators: [Validators.required]}),
-      birthDate: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
-      email: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
-      phone: new FormControl('', {validators: [Validators.required], updateOn: 'blur'}),
+      birthDate: new FormControl('', {validators: [Validators.required]}),
+      email: new FormControl('', {validators: [Validators.required]}),
+      phone: new FormControl('', {validators: [Validators.required]}),
       password1: new FormControl('', {validators: [
         Validators.required,
         Validators.minLength(5),
         Validators.maxLength(18)
-      ], updateOn: 'blur'}),
+      ]}),
       password2: new FormControl('', {validators: [ 
         Validators.required,
         this.validatePasswordSame
-      ], updateOn: 'blur'})
+      ]})
     })
   }
 
@@ -103,10 +108,38 @@ export class SignupModalComponent implements OnInit {
     }
   }
 
-  private submitLogin() {
-    console.log('date: ', this.birthDate.value);
+  private async submitLogin() {
+    const tmp = this.birthDate.value;
+    const date = new Date(tmp.year, tmp.month, tmp.day);
 
-    console.log('submit: ', this.invalid);
+    const signupData = {
+      licence: this.licence.value,
+      firstName: this.firstName.value,
+      lastName: this.lastName.value,
+      gender: this.gender.value,
+      birthdate: date.toString(),
+      email: this.email.value,
+      password: this.password.value
+    }
+
+    console.log('signup with: ', signupData);
+
+    try {
+      const token = await this.authRest.signup(signupData).toPromise();
+      this.authRest.setAuthTokens(token);
+    } catch (error) {
+      if (error.status === 409) {
+        alert(error.error);
+        this.step = 1
+        return;
+      } else {
+        alert('Erreur serveur, veuillez réessayer plus tard');
+        return;
+      }
+    }
+    let user = await this.userRest.getUserByEmail(localStorage.getItem("loggedInUser")).toPromise();
+    this.userRest.currentUser.next(user);
+    this.activeModal.close('submit');
   }
 
   private validatePasswordSame = (passControl: FormControl): ValidationErrors => {
