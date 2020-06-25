@@ -101,7 +101,7 @@
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],
-            "scripts":  [
+            "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
               "./node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
@@ -133,6 +133,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "Criterium-front"
+    }
+  },
+  "defaultProject": "Criterium-front",
+  "cli": {
+    "analytics": "a53270f0-2d30-4f81-a59c-2d34647c98d7"
+  }
 }

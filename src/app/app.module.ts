@@ -27,7 +27,7 @@ export function jwtTokenGetter() {
     }),
     AppRoutingModule,
     NavbarModule,
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
