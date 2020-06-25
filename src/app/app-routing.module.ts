@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Routes = [
   {
-    path: '/',
+    path: '',
     loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
   },
   {
